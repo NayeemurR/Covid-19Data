@@ -1,0 +1,36 @@
+{% extends "viewCasesChart/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="banner">
+        <div id="banner_title">
+          <h2>CoData</h2>
+        </div>
+        <div id="banner_logo">
+          <img src="{% static 'viewCasesChart/CoData_Logo.png'%}" alt="logo" width="50" height="46">
+        </div>
+      </div>    
+    
+    <div id="one_line">
+      <div id="main_title">
+        <h1>Covid-19 Data</h1>
+      </div>
+      
+      <div id="user_query_data">
+        <form id="country_form" class="form-inline md-form mr-auto mb-4">
+          <input type="text" autocomplete="false" placeholder="Country" id="country" class="form-control mr-sm-2">
+          <input type="submit" value="Search" class="btn blue-gradient btn-rounded btn-sm my-0">
+        </form>
+      </div>
+    </div>
+
+    <div id="confirmed_graph">
+        <canvas id="myChart"></canvas>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static 'viewCasesChart/index.js' %}"></script>
+{% endblock %}
