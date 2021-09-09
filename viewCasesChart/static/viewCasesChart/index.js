@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     dataset.ys = ys;
 
     // initialze a starting country
-    let country = "Italy";
+    let country = "US";
 
     // get today's date to access Covid-19 info up to today
     let today = new Date();
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         data: {
             labels: dataset.xs,
             datasets: [{
-                label: `loading ... ${country}`,
+                label: `Covid 19 Confirmed cases in ${country}`,
                 data: dataset.ys,
                 backgroundColor: ['rgb(108,229,232)'],
                 borderColor: ['rgb(108,229,232)'],
@@ -64,7 +64,13 @@ document.addEventListener('DOMContentLoaded', () =>{
             event.preventDefault(); // make sure to prevent the default action of submitting a form b/c we're not really submitting data, we just want the countnry name
         }
 
-        country = document.getElementById('country').value;
+        let user_input = document.getElementById('country').value;
+
+        country = user_input.charAt(0).toUpperCase() + user_input.slice(1);
+
+        // give feedback to user that data is loading in background
+        myChart.data.datasets[0].label =  `loading ... ${country}`;
+        myChart.update();
 
         // set all variables to empty again:
         xs = [];
