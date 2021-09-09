@@ -1,1 +1,1 @@
-web: gunicorn Covid19Data.wsgi
+web: gunicorn Covid19Data\Covid19Data.wsgi
