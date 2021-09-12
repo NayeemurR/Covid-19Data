@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () =>{
+    // set the alert div to none initially
+    document.getElementById('alert').style.display = 'none';
+    // when the alert pops up, and user clicks 'x', hide it and reset the input field to blank
+    document.getElementById('alert_clicked').addEventListener('click', (e) => {
+        document.getElementById('alert').style.display = 'none';
+        document.getElementById('country').value = "";
+    })
+
     // set global variables to represent x and y axis data
     let xs = [];
     let ys = [];
@@ -17,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
 
-
+    // initialize data for chart
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'line',
@@ -52,20 +60,21 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
     });
 
-    // Load initial data for Italy
+    // Load initial data for US
     document.getElementById('country').value = country;
     dataToGraph();
 
-    // here goes your Event-Listener with function as argument;
+    // when the country form is submitted, run the dataToGraph function, (no parenthesis b/c then we'll pass the return as an arg, which is not what we want; we want to run the function)
     document.getElementById('country_form').addEventListener('submit', dataToGraph);
 
+    // make sure to prevent the default action of submitting a form b/c we're not really submitting data, we just want the countnry name
     function dataToGraph(event) {
         if (event) {
-            event.preventDefault(); // make sure to prevent the default action of submitting a form b/c we're not really submitting data, we just want the countnry name
+            event.preventDefault();
         }
 
+        // get the user's input and set it to be global variable country, with some formatting (first letter capital) 
         let user_input = document.getElementById('country').value;
-
         country = user_input.charAt(0).toUpperCase() + user_input.slice(1);
 
         // give feedback to user that data is loading in background
@@ -79,25 +88,29 @@ document.addEventListener('DOMContentLoaded', () =>{
         dataset.xs = xs;
         dataset.ys = ys;
 
-        // fetch() is a Promise, i.e. it is like an async callback already,
-        // hence no need to call async again.
+
+        // fetch() is a Promise, i.e. it is like an async callback already; hence no need to call async again.
         fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=${country}&min_date=2020-04-22&max_date=${today}`)
-            .then(response => response.json())
-            .then(days => {
-                days.forEach(day => {
-                    ys.push(day.confirmed);
-                    xs.push(day.date.slice(0, 10));
-                });
+        .then(response => response.json())
+        .then(days => {
+            console.log(days.length);
+            days.forEach(day => {
+                ys.push(day.confirmed);
+                xs.push(day.date.slice(0, 10));
+            });
+            // check if data for that country actually exists, if so, we can graph the data
+            if (xs.length > 0) { 
                 dataset.xs = xs;
                 dataset.ys = ys;
+            } else {
+                // else display the alert div
+                document.getElementById('alert').style.display = 'block';
+
+            }
+            graphit();
+        })
+    }
                 
-                // now graph this data
-                graphit();
-            })
-
-    };
-
-
     function graphit() {
         // re-assign the datasets again (x- and y-axis)
         myChart.data.labels = dataset.xs;
@@ -106,4 +119,5 @@ document.addEventListener('DOMContentLoaded', () =>{
         // now update chart
         myChart.update();
     };
+
 });

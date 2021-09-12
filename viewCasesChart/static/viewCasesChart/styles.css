@@ -15,22 +15,38 @@
     margin-left: 1%;
 }
 
+.alert {
+    left: 0;
+    margin: auto; /* Centers alert component */
+    position: fixed; /* So that it will display relative to the entire page */
+    right: 0;
+    text-align: center; /* Centers 'Alert Test' text */
+    top: 1em;
+    width: 25%;
+}
+
 #one_line {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     margin: 5% 0% 5% 5%;
-    overflow: hidden;
 }
 
 #main_title {
-    float: left;
+    order: 1;
 }
 
+
 #user_query_data {
-    float: right;
+    order: 2;
     margin: 1% 5% 0% 0%;
+}
+
+#country_form {
+    display: flex;
 }
 
 #confirmed_graph {
     margin: 2% 2% 2% 2%;
     height: 700px;
-
 }
