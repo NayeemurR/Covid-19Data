@@ -3,16 +3,32 @@
     height: 10%;
     background-color: rgb(224,255,255);
     padding: 3%;
-    overflow: hidden;
-}
-
-#banner_title {
-    float: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #banner_logo {
-    float: left;
-    margin-left: 1%;
+    order: 1;
+}
+
+#banner_logo_img {
+    width: 100px;
+    height: 100px;
+}
+
+#banner_title {
+    order: 2;
+}
+
+#selection_buttons {
+    order: 3;
+    margin-left: auto;
+}
+
+.white-button {
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(206,212,218);
 }
 
 .alert {

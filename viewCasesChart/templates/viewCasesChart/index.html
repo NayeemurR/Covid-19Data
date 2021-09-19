@@ -3,14 +3,22 @@
 
 {% block body %}
     <div id="banner">
-        <div id="banner_title">
-          <h2>CoData</h2>
-        </div>
-        <div id="banner_logo">
-          <img src="{% static 'viewCasesChart/CoData_Logo.png'%}" alt="logo" width="50" height="46">
-        </div>
-      </div>    
-      
+
+      <div id="banner_logo">
+        <img id="banner_logo_img" src="{% static 'viewCasesChart/CoData_Logo.png'%}" alt="logo">
+      </div>
+
+      <div id="banner_title">
+        <h2>CoData</h2>
+      </div>
+
+      <div id="selection_buttons" class="btn-group" role="group" aria-label="Basic example">
+        <button id="confirmed_cases_button" type="button" class="btn btn-info white-button">Confirmed Cases</button>
+        <button id="deaths_button" type="button" class="btn btn-info white-button">Deaths</button>
+      </div>
+
+    </div>    
+    
     <div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
       Country data not found
       <button id="alert_clicked" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

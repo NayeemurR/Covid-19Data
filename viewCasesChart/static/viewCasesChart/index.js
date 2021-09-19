@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', () =>{
         document.getElementById('country').value = "";
     })
 
+    // keep track of what mode is clicked
+    let mode = "confirmed_cases";
+
+    // keep track of graph label
+    let graph_label = "Confirmed Cases";
+
     // set global variables to represent x and y axis data
     let xs = [];
     let ys = [];
@@ -32,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         data: {
             labels: dataset.xs,
             datasets: [{
-                label: `Covid 19 Confirmed cases in ${country}`,
+                label: "Covid 19 " + graph_label + ` in ${country}`,
                 data: dataset.ys,
                 backgroundColor: ['rgb(108,229,232)'],
                 borderColor: ['rgb(108,229,232)'],
@@ -64,6 +70,18 @@ document.addEventListener('DOMContentLoaded', () =>{
     document.getElementById('country').value = country;
     dataToGraph();
 
+    // if the user clicked the 'Deaths' button, then change the mode to "deaths"
+    document.getElementById("deaths_button").addEventListener('click', () => {
+        mode = "deaths";
+        graph_label = "Deaths";
+    })
+    // if the user clicked the 'Confirmed Cases' button, then change the mode to "confirmed_cases"
+    document.getElementById("confirmed_cases_button").addEventListener('click', () => {
+        mode = "confirmed_cases";
+        graph_label = "Confirmed Cases"
+    })
+
+
     // when the country form is submitted, run the dataToGraph function, (no parenthesis b/c then we'll pass the return as an arg, which is not what we want; we want to run the function)
     document.getElementById('country_form').addEventListener('submit', dataToGraph);
 
@@ -93,9 +111,13 @@ document.addEventListener('DOMContentLoaded', () =>{
         fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=${country}&min_date=2020-04-22&max_date=${today}`)
         .then(response => response.json())
         .then(days => {
-            console.log(days.length);
             days.forEach(day => {
-                ys.push(day.confirmed);
+                if (mode == "confirmed_cases") {
+                    ys.push(day.confirmed);
+                } else if (mode == "deaths") {
+                    ys.push(day.deaths)
+                }
+
                 xs.push(day.date.slice(0, 10));
             });
             // check if data for that country actually exists, if so, we can graph the data
@@ -115,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         // re-assign the datasets again (x- and y-axis)
         myChart.data.labels = dataset.xs;
         myChart.data.datasets[0].data = dataset.ys;
-        myChart.data.datasets[0].label =  `Covid 19 Confirmed cases in ${country}`;
+        myChart.data.datasets[0].label =  "Covid 19 " + graph_label + ` in ${country}`;
         // now update chart
         myChart.update();
     };
