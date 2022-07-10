@@ -1,3 +1,4 @@
+// copyright @Nayeemur 2021
 document.addEventListener('DOMContentLoaded', () =>{
     // set the alert div to none initially
     document.getElementById('alert').style.display = 'none';
@@ -14,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     let graph_label = "Confirmed Cases";
 
     // set global variables to represent x and y axis data
-    let xs = [];
+    let xs = []; 
     let ys = [];
     let dataset = {};
 
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     // if the user clicked the 'Confirmed Cases' button, then change the mode to "confirmed_cases"
     document.getElementById("confirmed_cases_button").addEventListener('click', () => {
         mode = "confirmed_cases";
-        graph_label = "Confirmed Cases"
+        graph_label = "Confirmed Cases";
     })
 
 
@@ -109,13 +110,17 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         // fetch() is a Promise, i.e. it is like an async callback already; hence no need to call async again.
         fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=${country}&min_date=2020-04-22&max_date=${today}`)
-        .then(response => response.json())
+        .then(response => {
+            response.text(); 
+            console.log(response);
+        })
         .then(days => {
+            console.log(days);
             days.forEach(day => {
                 if (mode == "confirmed_cases") {
                     ys.push(day.confirmed);
                 } else if (mode == "deaths") {
-                    ys.push(day.deaths)
+                    ys.push(day.deaths);
                 }
 
                 xs.push(day.date.slice(0, 10));
