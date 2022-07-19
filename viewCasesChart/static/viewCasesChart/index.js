@@ -111,11 +111,10 @@ document.addEventListener('DOMContentLoaded', () =>{
         // fetch() is a Promise, i.e. it is like an async callback already; hence no need to call async again.
         fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=${country}&min_date=2020-04-22&max_date=${today}`)
         .then(response => {
-            response.text(); 
-            console.log(response);
+            return response.json()
         })
         .then(days => {
-            console.log(days);
+            // console.log(days);
             days.forEach(day => {
                 if (mode == "confirmed_cases") {
                     ys.push(day.confirmed);
