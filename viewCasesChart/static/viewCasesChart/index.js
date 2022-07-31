@@ -1,4 +1,4 @@
-// copyright @Nayeemur 2021
+// copyright @Nayeemur 2022
 document.addEventListener('DOMContentLoaded', () =>{
     // set the alert div to none initially
     document.getElementById('alert').style.display = 'none';
@@ -71,15 +71,17 @@ document.addEventListener('DOMContentLoaded', () =>{
     document.getElementById('country').value = country;
     dataToGraph();
 
-    // if the user clicked the 'Deaths' button, then change the mode to "deaths"
+    // if the user clicked the 'Deaths' button, then change the mode to "deaths" and graph the data
     document.getElementById("deaths_button").addEventListener('click', () => {
         mode = "deaths";
         graph_label = "Deaths";
+        dataToGraph();
     })
-    // if the user clicked the 'Confirmed Cases' button, then change the mode to "confirmed_cases"
+    // if the user clicked the 'Confirmed Cases' button, then change the mode to "confirmed_cases" and graph the data
     document.getElementById("confirmed_cases_button").addEventListener('click', () => {
         mode = "confirmed_cases";
         graph_label = "Confirmed Cases";
+        dataToGraph();
     })
 
 
@@ -109,20 +111,25 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
         // fetch() is a Promise, i.e. it is like an async callback already; hence no need to call async again.
-        fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=${country}&min_date=2020-04-22&max_date=${today}`)
+        fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/covid-19-qppza/service/REST-API/incoming_webhook/countries_summary?country=${country}&min_date=2020-01-13&max_date=${today}`)
         .then(response => {
             return response.json()
         })
         .then(days => {
-            // console.log(days);
             days.forEach(day => {
                 if (mode == "confirmed_cases") {
-                    ys.push(day.confirmed);
+                    // we want to start with the first day a confirmed case shows up, so we can use that as the x axis
+                    if (day.confirmed > 0) {
+                        ys.push(day.confirmed);
+                        xs.push(day.date.slice(0, 10));
+                    }
                 } else if (mode == "deaths") {
-                    ys.push(day.deaths);
+                    // we want to start with the first day a death shows up, so we can use that as the x axis
+                    if (day.deaths > 0) {
+                        ys.push(day.deaths);
+                        xs.push(day.date.slice(0, 10));
+                    }
                 }
-
-                xs.push(day.date.slice(0, 10));
             });
             // check if data for that country actually exists, if so, we can graph the data
             if (xs.length > 0) { 
@@ -133,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () =>{
                 document.getElementById('alert').style.display = 'block';
 
             }
+            // update the chart with the new data
             graphit();
         })
     }
